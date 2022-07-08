@@ -7,10 +7,12 @@ import membes_list, { IMember } from "constants/members";
 import Person from "components/templates/person";
 
 interface Props {
-  member: IMember;
+  member?: IMember;
 }
 
 const Membro: NextPage<Props> = ({ member }) => {
+  if (!member) return <div></div>;
+
   return (
     <div>
       <Person person={member} />
@@ -39,12 +41,16 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = membes_list.map((member) => ({
+    params: {
+      id: member.name.toLowerCase(),
+    },
+  }));
+
+  console.log("paths", paths);
+
   return {
-    paths: membes_list.map((member) => ({
-      params: {
-        id: member.name.toLowerCase(),
-      },
-    })),
+    paths,
     fallback: true, // false or 'blocking'
   };
 };
